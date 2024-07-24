@@ -1,6 +1,15 @@
 import maze_funcs
+import time
+import tracemalloc
 
 def dfs(maze, start, end):
+    # Inicia contagem de tempo
+    start_time = time.time()
+    
+    # Inicia contagem de consumo de memória
+    tracemalloc.start()
+    start_snapshot = tracemalloc.take_snapshot()
+    
     stack = [(start, [start])]
     visited = set()
 
@@ -8,7 +17,18 @@ def dfs(maze, start, end):
         (x, y), path = stack.pop()
 
         if (x, y) == end:
-            return path
+            # Termina contagem de tempo
+            end_time = time.time()
+            elapsed_time = end_time - start_time
+
+            # Termina a contagem de consumo de memória
+            end_snapshot = tracemalloc.take_snapshot()
+            tracemalloc.stop()
+
+            memory_diff = end_snapshot.compare_to(start_snapshot, 'lineno')
+            total_memory = sum(stat.size for stat in memory_diff)
+
+            return path, elapsed_time, total_memory
         
         for dx, dy in maze_funcs.DIRECTIONS:
             nx, ny = x + dx, y + dy
@@ -17,4 +37,15 @@ def dfs(maze, start, end):
                 visited.add((nx, ny))
                 stack.append(((nx, ny), path + [(nx, ny)]))
                 
-    return None
+    # Termina contagem de tempo
+    end_time = time.time()
+    elapsed_time = end_time - start_time
+
+    # Termina a contagem de consumo de memória
+    end_snapshot = tracemalloc.take_snapshot()
+    tracemalloc.stop()
+
+    memory_diff = end_snapshot.compare_to(start_snapshot, 'lineno')
+    total_memory = sum(stat.size for stat in memory_diff)
+
+    return None, elapsed_time, total_memory

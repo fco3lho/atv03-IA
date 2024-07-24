@@ -12,13 +12,13 @@ END = 'E'
 # Movimentos possíveis: esquerda, direita, cima, baixo
 DIRECTIONS = [(-1, 0), (1, 0), (0, -1), (0, 1)]
 
-def initialize_maze(width, height):
-    maze = [[OBSTACLE if random.random() < 0.3 else FREE for _ in range(width)] for _ in range(height)]
-    start = (random.randint(0, height-1), random.randint(0, width-1))
-    end = (random.randint(0, height-1), random.randint(0, width-1))
+def initialize_maze():
+    maze = [[OBSTACLE if random.random() < 0.3 else FREE for _ in range(WIDTH)] for _ in range(HEIGHT)]
+    start = (random.randint(0, HEIGHT-1), random.randint(0, WIDTH-1))
+    end = (random.randint(0, HEIGHT-1), random.randint(0, WIDTH-1))
 
     while end == start:
-        end = (random.randint(0, height-1), random.randint(0, width-1))
+        end = (random.randint(0, HEIGHT-1), random.randint(0, WIDTH-1))
 
     maze[start[0]][start[1]] = START
     maze[end[0]][end[1]] = END
